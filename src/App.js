@@ -1,25 +1,42 @@
-import logo from './logo.svg';
 import './App.css';
+import { Component } from "react";
+import CorrelationMatrix from './CorrelationMatrix';
+import tips from './tips.csv'
+import * as d3 from 'd3';
 
-function App() {
-    return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
-    );
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: []
+        };
+    }
+
+    componentDidMount() {
+        var self = this;
+        console.log(tips);
+        d3.csv(tips, function(d) {
+            return {
+                tip: parseFloat(d.tip),
+                total_bill: parseFloat(d.total_bill),
+                day: d.day,
+            };
+        })
+            .then(function(csvData) {
+                self.setState({ data: csvData });
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
+    }
+
+    
+    render() {
+        return (
+            <div className="App">
+            </div>
+        );
+    }
 }
 
 export default App;
