@@ -80,11 +80,6 @@ class CorrelationMatrix extends Component {
             matrix.push(Array(numCols).fill(0));
         }
 
-        const means = []
-        for(let i = 0; i < numCols; i++) {
-            means.push(this.getColumnMean(data, cols[i]));
-        }
-
         for(let i = 0; i < numCols; i++) {
             for(let j = i; j < numCols; j++) {
                 let col1 = cols[i];
@@ -98,7 +93,7 @@ class CorrelationMatrix extends Component {
                 }
 
                 let correlation = jStat.corrcoeff(col1Data, col2Data);
-                console.log(`correlation between ${col1} and ${col2}: ${correlation}`);
+                
                 matrix[i][j] = correlation;
                 matrix[j][i] = correlation;
             }
@@ -118,14 +113,6 @@ class CorrelationMatrix extends Component {
         }
 
         return matrixFormattedData;
-    }
-
-    getColumnMean(data, col) {
-        let mean = 0.;
-        for(let i = 0; i < data.length; i++) {
-            mean += data[i][col];
-        }
-        return mean / data.length;
     }
 
     render() {
