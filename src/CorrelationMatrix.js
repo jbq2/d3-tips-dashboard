@@ -1,14 +1,11 @@
 import { Component } from "react";
 import * as d3 from 'd3';
+import jStat from 'jstat';
 
 class CorrelationMatrix extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-    }
-
-    componentDidMount() {
-        console.log('CorrelationMatrix was mounted!');
     }
 
     componentDidUpdate() {
@@ -25,8 +22,6 @@ class CorrelationMatrix extends Component {
         console.log('Printing filteredData from CorrelationMatrix: ');
         console.log(filteredData);
 
-        // var totalBillData = 
-
         var margin = { top: 30, right: 30, bottom: 30, left: 30 };
         var width = 500 - margin.left - margin.right;
         var height = 500 - margin.top - margin.bottom;
@@ -38,13 +33,11 @@ class CorrelationMatrix extends Component {
             .attr('transform', `translate(${margin.left}, ${margin.top}`);
 
         var cols = Object.keys(filteredData[0]);
-        console.log("cols:");
-        console.log(cols);
 
         var xScale = d3.scaleBand()
             .range([0, width])
             .domain(cols)
-            .padding(1);
+            .padding(0);
         corrMatrixContainer
             .append('g')
             .attr('transform', `translate(0, ${height})`)
@@ -53,19 +46,33 @@ class CorrelationMatrix extends Component {
         var yScale = d3.scaleBand()
             .range([height, 0])
             .domain(cols)
-            .padding(1);
+            .padding(0);
         corrMatrixContainer
             .append('g')
-            .call(d3.axisLeft(yScale));
+            .attr('transform', `translate(${width}, 0)`)
+            .call(d3.axisRight(yScale));
 
-        console.log(this.calculateCorrMatrix(filteredData, cols));
+        let corrMatrixData = this.getDataForCorrMatrix(filteredData, cols);
+        let minCorrMatData = Math.min(...corrMatrixData.map(e => e.coef)); 
+        let maxCorrMatData = Math.max(...corrMatrixData.map(e => e.coef));
+        let avgCorrMatData = (minCorrMatData + maxCorrMatData) / 2;
         
-        var divergingColors = d3.scaleDiverging()
-            .range(['#8c03fc', '#fcd303'])
-            .domain([0, 1]);
+        var divergingColors = d3.scaleLinear()
+            .range(['#004b40', '#f6f6f6', '#533600'])
+            .domain([minCorrMatData, avgCorrMatData, maxCorrMatData]);
+
+        corrMatrixContainer.selectAll('rect')
+            .data(corrMatrixData)
+            .enter()
+            .append('rect')
+            .attr('x', function(d) { return xScale(d.var1) })
+            .attr('y', function(d) { return yScale(d.var2) })
+            .attr('width', xScale.bandwidth())
+            .attr('height', yScale.bandwidth())
+            .style('fill', function(d) { return divergingColors(d.coef) });
     }
 
-    calculateCorrMatrix(data, cols) {
+    getDataForCorrMatrix(data, cols) {
         const matrix = [];
         const numCols = cols.length;
 
@@ -80,34 +87,42 @@ class CorrelationMatrix extends Component {
 
         for(let i = 0; i < numCols; i++) {
             for(let j = i; j < numCols; j++) {
-                let numerator = 0;
-                let denom1 = 0;
-                let denom2 = 0;
+                let col1 = cols[i];
+                let col2 = cols[j];
+                let col1Data = [];
+                let col2Data = [];
 
-                for(let row of data) {
-                    let col = cols[j]
-                    let val1 = parseFloat(row[col]) - means[i];
-                    let val2 = parseFloat(row[col]) - means[j];
-
-                    numerator += val1 * val2;
-                    denom1 += val1 ** 2;
-                    denom2 += val2 ** 2;
+                for(let k = 0; k < data.length; k++) {
+                    col1Data.push(data[k][col1]);
+                    col2Data.push(data[k][col2]);
                 }
 
-                const correlation = numerator / Math.sqrt(denom1 * denom2);
-
+                let correlation = jStat.corrcoeff(col1Data, col2Data);
+                console.log(`correlation between ${col1} and ${col2}: ${correlation}`);
                 matrix[i][j] = correlation;
                 matrix[j][i] = correlation;
             }
         }
 
-        return matrix;
+        let matrixFormattedData = [];
+        for(let i = 0; i < numCols; i++) {
+            let rowCol = cols[i];
+            for(let j = 0; j < numCols; j++) {
+                let colCol = cols[j];
+                matrixFormattedData.push({
+                    var1: rowCol,
+                    var2: colCol,
+                    coef: matrix[i][j]
+                });
+            }
+        }
+
+        return matrixFormattedData;
     }
 
     getColumnMean(data, col) {
         let mean = 0.;
         for(let i = 0; i < data.length; i++) {
-            // console.log(data[i][col]);
             mean += data[i][col];
         }
         return mean / data.length;
@@ -115,7 +130,10 @@ class CorrelationMatrix extends Component {
 
     render() {
         return (
-            <svg id="corr-mat-svg" className="chart">
+            <svg 
+                id="corr-mat-svg" 
+                className="chart"
+            >
                 <g id="corr-mat-group" className="chart-group"></g>
             </svg>
         );

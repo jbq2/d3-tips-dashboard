@@ -37,7 +37,6 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                hi
                 <CorrelationMatrix data={ this.state.data } />
             </div>
         );
