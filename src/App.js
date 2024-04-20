@@ -1,6 +1,5 @@
 import './App.css';
 import { Component } from "react";
-import CorrelationMatrix from './CorrelationMatrix';
 import tips from './tips.csv'
 import * as d3 from 'd3';
 
