@@ -86,6 +86,22 @@ class CorrelationMatrix extends Component {
             .attr('height', yScale.bandwidth())
             .style('fill', function(d) { return divergingColors(d.coef) })
 
+        // adding text to each correlation matrix cell to show the correlation
+        // coefficient of that cell's pair of variables
+        corrMatrixContainer.selectAll()
+            .data(corrMatrixData)
+            .enter()
+            .append('text')
+            .attr('x', function(d) {
+                const defOffset = -10; 
+                const xPos = xScale.bandwidth() / 2;
+                return xScale(d.var1) + xPos + defOffset 
+            })
+            .attr('y', function(d) { return yScale(d.var2) + (yScale.bandwidth() / 2) })
+            .attr('font-size', 15)
+            .attr('fill', function(d) { return d.coef > 0.9 ? 'black' : 'white' })
+            .text(function(d) { return Number(d.coef).toFixed(1) })
+
         // creating the color gradient definition for the color bar
         var linGrad = d3.select('#corr-mat-svg').append('defs')
             .append('linearGradient')
