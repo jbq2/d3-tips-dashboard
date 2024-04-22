@@ -33,6 +33,12 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                <div className="dropdown">dropdown</div>
+                <div className='row'>
+                    <div className='barchart'>Bar chart</div>
+                    <div className='heat-map'>Heat map</div>
+                </div>
+                <div className='scatterplot'>scatterplot</div>
             </div>
         );
     }
