@@ -37,7 +37,12 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <CorrelationMatrix data={ this.state.data } />
+                <div className="dropdown">dropdown</div>
+                <div className='row'>
+                    <div className='barchart'>Bar chart</div>
+                    <div className='heat-map'><CorrelationMatrix data={ this.state.data } /></div>
+                </div>
+                <div className='scatterplot'>scatterplot</div>
             </div>
         );
     }
