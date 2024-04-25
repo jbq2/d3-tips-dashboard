@@ -6,13 +6,16 @@ import CorrelationMatrix from './CorrelationMatrix';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import DropdownToggle from 'react-bootstrap/esm/DropdownToggle';
+import Scatter from './Scatter';
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [],
-            selectedNumerical: ""
+            selectedNumerical: "",
+            selectedX: "",
+            selectedY: "",
         };
     }
 
@@ -39,10 +42,6 @@ class App extends Component {
     }
 
 
-    handleSelect = (eventKey) => {
-        this.setState( {selectedNumerical: eventKey})
-    }
-
     renderDropdownItems() {
         const { data } = this.state;
         
@@ -56,6 +55,13 @@ class App extends Component {
             return null
         });
     }
+
+    onMatrixCellClick = (var1, var2) => {
+        this.setState({
+            selectedX: var1,
+            selectedY: var2
+        })
+    }
     
     render() {
         const { selectedNumerical } = this.state
@@ -64,7 +70,7 @@ class App extends Component {
                 <div className="dropdown">
                     <Dropdown title={selectedNumerical || "Dropdown"} onSelect={(eventKey) => this.setState({selectedNumerical: eventKey})}>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            {selectedNumerical || (this.props.data && this.props.data.length > 0 ? Object.keys(this.props.data[0])[0] : 'Select feature')}
+                            {selectedNumerical || 'Select feature'}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                             {this.renderDropdownItems()}
@@ -73,9 +79,16 @@ class App extends Component {
                 </div>
                 <div className='row'>
                     <div className='barchart'>Bar chart</div>
-                    <div className='heat-map'><CorrelationMatrix data={ this.state.data } /></div>
+                    <div className='heat-map'>
+                        <CorrelationMatrix 
+                            data={ this.state.data } 
+                            onMatrixCellClick={this.onMatrixCellClick}
+                        />
+                    </div>
                 </div>
-                <div className='scatterplot'>scatterplot</div>
+                <div className='scatterplot'>
+                    <Scatter x_var={this.state.selectedX} y_var={this.state.selectedY} />
+                </div>
             </div>
         );
     }
