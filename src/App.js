@@ -87,7 +87,11 @@ class App extends Component {
                     </div>
                 </div>
                 <div className='scatterplot'>
-                    <Scatter x_var={this.state.selectedX} y_var={this.state.selectedY} />
+                    <Scatter 
+                        x_var={this.state.selectedX} 
+                        y_var={this.state.selectedY} 
+                        data={this.state.data}
+                    />
                 </div>
             </div>
         );
