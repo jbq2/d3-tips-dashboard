@@ -16,6 +16,7 @@ class App extends Component {
             selectedNumerical: "",
             selectedX: "",
             selectedY: "",
+            selectedRadio: "",
         };
     }
 
@@ -63,6 +64,12 @@ class App extends Component {
         })
     }
     
+    handleRadioChange = (event) => {
+        this.setState({
+          selectedRadio: event.target.value
+        });
+      };
+
     render() {
         const { selectedNumerical } = this.state
         return (
@@ -78,7 +85,31 @@ class App extends Component {
                     </Dropdown>
                 </div>
                 <div className='row'>
-                    <div className='barchart'>Bar chart</div>
+                    <div className='barchart'>
+                        <div class="radio-buttons">
+                            <label className="radio-label">
+                                <input type="radio" name="option" value="sex" checked={this.state.selectedRadio === "sex"} 
+                                        onChange={this.handleRadioChange} className="radio-input"/>
+                                Sex
+                            </label>
+                            <label className="radio-label">
+                                <input type="radio" name="option" value="smoker" checked={this.state.selectedRadio === "smoker"} 
+                                        onChange={this.handleRadioChange} className="radio-input"/>
+                                Smoker
+                            </label>
+                            <label className="radio-label">
+                                <input type="radio" name="option" value="day" checked={this.state.selectedRadio === "day"} 
+                                        onChange={this.handleRadioChange} className="radio-input"/>
+                                Day
+                            </label>
+                            <label className="radio-label">
+                                <input type="radio" name="option" value="time" checked={this.state.selectedRadio === "time"} 
+                                        onChange={this.handleRadioChange} className="radio-input"/>
+                                Time
+                            </label>
+                            {/* <p>Selected Option: {this.state.selectedRadio}</p> */}
+                        </div>
+                    </div>
                     <div className='heat-map'>
                         <CorrelationMatrix 
                             data={ this.state.data } 
