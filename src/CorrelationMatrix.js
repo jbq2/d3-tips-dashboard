@@ -85,6 +85,9 @@ class CorrelationMatrix extends Component {
             .attr('width', xScale.bandwidth())
             .attr('height', yScale.bandwidth())
             .style('fill', function(d) { return divergingColors(d.coef) })
+            .on('click', (event, d) => {
+                this.props.onMatrixCellClick(d.var1, d.var2)
+            });
 
         // adding text to each correlation matrix cell to show the correlation
         // coefficient of that cell's pair of variables
