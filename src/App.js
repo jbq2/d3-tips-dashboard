@@ -4,9 +4,8 @@ import tips from './tips.csv'
 import * as d3 from 'd3';
 import CorrelationMatrix from './CorrelationMatrix';
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import DropdownToggle from 'react-bootstrap/esm/DropdownToggle';
 import Scatter from './Scatter';
+import BarChart from './BarChart';
 
 class App extends Component {
     constructor(props) {
@@ -16,6 +15,7 @@ class App extends Component {
             selectedNumerical: "",
             selectedX: "",
             selectedY: "",
+            selectedRadio: "",
         };
     }
 
@@ -63,6 +63,12 @@ class App extends Component {
         })
     }
     
+    handleRadioChange = (event) => {
+        this.setState({
+          selectedRadio: event.target.value
+        });
+      };
+
     render() {
         const { selectedNumerical } = this.state
         return (
@@ -78,7 +84,35 @@ class App extends Component {
                     </Dropdown>
                 </div>
                 <div className='row'>
-                    <div className='barchart'>Bar chart</div>
+                    <div className='barchart'>
+                        <div class="radio-buttons">
+                            <label className="radio-label">
+                                <input type="radio" name="option" value="sex" checked={this.state.selectedRadio === "sex"} 
+                                        onChange={this.handleRadioChange} className="radio-input"/>
+                                Sex
+                            </label>
+                            <label className="radio-label">
+                                <input type="radio" name="option" value="smoker" checked={this.state.selectedRadio === "smoker"} 
+                                        onChange={this.handleRadioChange} className="radio-input"/>
+                                Smoker
+                            </label>
+                            <label className="radio-label">
+                                <input type="radio" name="option" value="day" checked={this.state.selectedRadio === "day"} 
+                                        onChange={this.handleRadioChange} className="radio-input"/>
+                                Day
+                            </label>
+                            <label className="radio-label">
+                                <input type="radio" name="option" value="time" checked={this.state.selectedRadio === "time"} 
+                                        onChange={this.handleRadioChange} className="radio-input"/>
+                                Time
+                            </label>
+                        </div>
+                        <BarChart 
+                                x_var={this.state.selectedRadio} 
+                                y_var={this.state.selectedNumerical} 
+                                data={this.state.data}
+                            />
+                    </div>
                     <div className='heat-map'>
                         <CorrelationMatrix 
                             data={ this.state.data } 

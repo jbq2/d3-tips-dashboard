@@ -27,6 +27,7 @@
   border: 1px solid rgb(212,212,212);
   padding: 10px;
   margin-right: 10px;
+  height: 622px;
 }
 
 .heat-map {
@@ -48,4 +49,16 @@
 
 .chart {
     padding: 10px;
+}
+
+.radio-buttons {
+  margin: auto;
+}
+
+.radio-label {
+  margin: 10px;
+}
+
+.radio-input {
+  margin-right: 3px;
 }
