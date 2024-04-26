@@ -4,9 +4,8 @@ import tips from './tips.csv'
 import * as d3 from 'd3';
 import CorrelationMatrix from './CorrelationMatrix';
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import DropdownToggle from 'react-bootstrap/esm/DropdownToggle';
 import Scatter from './Scatter';
+import BarChart from './BarChart';
 
 class App extends Component {
     constructor(props) {
@@ -107,7 +106,11 @@ class App extends Component {
                                         onChange={this.handleRadioChange} className="radio-input"/>
                                 Time
                             </label>
-                            {/* <p>Selected Option: {this.state.selectedRadio}</p> */}
+                            <BarChart 
+                                x_var={this.state.selectedRadio} 
+                                y_var={this.state.selectedNumerical} 
+                                data={this.state.data}
+                            />
                         </div>
                     </div>
                     <div className='heat-map'>
