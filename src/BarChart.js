@@ -14,9 +14,9 @@ class BarChart extends Component {
     console.log("view selections.... x = ", x_var, "y = ", y_var); // Check the format of the data in the conosole
 
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 10, bottom: 30, left: 20 },
-      w = 500 - margin.left - margin.right,
-      h = 300 - margin.top - margin.bottom;
+    var margin = { top: 10, right: 10, bottom: 50, left: 22 },
+      w = 600 - margin.left - margin.right,
+      h = 400 - margin.top - margin.bottom;
 
     
     var container = d3
@@ -25,6 +25,9 @@ class BarChart extends Component {
       .attr("height", h + margin.top + margin.bottom)
       .select(".g_2")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+
+    container.selectAll(".x_axis_label, .y_axis_label").remove();
 
     // Calculate average 
     const averages = d3.rollup(
@@ -50,7 +53,17 @@ class BarChart extends Component {
       .attr("class", "x_axis_g")
       .attr("transform", `translate(0, ${h})`)
       .call(d3.axisBottom(x_scale));
-    
+
+    // X axis label
+    container
+      .append("text")
+      .attr("class", "x_axis_label")
+      .attr("x", w / 2 + margin.left) 
+      .attr("y", h + margin.top + 25) 
+      .style("text-anchor", "middle")
+      .text(this.props.x_var); 
+      
+        
     // Add Y axis
     // var y_data = data.map(d => d[y_var]);
     var y_data = Array.from(averages.values());
@@ -66,6 +79,16 @@ class BarChart extends Component {
       .attr("class", "y_axis_g")
       .attr("transform", `translate(${margin.left},0)`)
       .call(d3.axisLeft(y_scale));
+
+    // Y axis label
+    container
+      .append("text")
+      .attr("class", "y_axis_label")
+      .attr("transform", "rotate(-90)") 
+      .attr("x", -(h / 2) - margin.top) 
+      .attr("y", -margin.left + 10) 
+      .style("text-anchor", "middle")
+      .text(this.props.y_var); 
 
     // create bars
     container
@@ -92,20 +115,11 @@ class BarChart extends Component {
             .attr("text-anchor", "middle") // Center-align the text horizontally
             .attr("alignment-baseline", "hanging") // Align text to the top
             .attr("fill", "black")
-            .text(d => d.y.toFixed(5));
+            .text(d => (d.y ? d.y.toFixed(5) : "")); // Check if d.y exists before applying toFixed(5)
+ //.text(d => d.y); // .text(d => d.y.toFixed(5)); 
           
       })
   }
-   
-  /* d3.select("#demo2").selectAll(".legend_g").data([0]).join("g").attr("class","legend_g")
-      .attr("transform","translate(420,20)").selectAll(".item").data(["open","close"]).join("g")
-      .attr("class","item").attr("transform", (d,i) => `translate(0,${i*25})`)
-      .attr("add_items", function(dd){
-        d3.select(this).selectAll("rect").data([0]).join("rect").attr("x",0).attr("width",10).attr("height",10)
-          .attr("fill",(d) => colormap[dd]);
-        d3.select(this).selectAll("text").data([0]).join("text").attr("x",20).attr("y",10)
-          .text((d) => colormap[dd]);
-      }) */
 
   render() {
     return (
