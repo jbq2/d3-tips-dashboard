@@ -106,12 +106,12 @@ class App extends Component {
                                         onChange={this.handleRadioChange} className="radio-input"/>
                                 Time
                             </label>
-                            <BarChart 
+                        </div>
+                        <BarChart 
                                 x_var={this.state.selectedRadio} 
                                 y_var={this.state.selectedNumerical} 
                                 data={this.state.data}
                             />
-                        </div>
                     </div>
                     <div className='heat-map'>
                         <CorrelationMatrix 
