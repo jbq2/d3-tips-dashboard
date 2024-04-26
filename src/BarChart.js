@@ -57,7 +57,23 @@ class BarChart extends Component {
       .attr("transform", `translate(${margin.left},0)`)
       .call(d3.axisLeft(y_scale));
 
-    
+    // create bars
+    container
+      .selectAll(".chart")
+      .data(data)
+      .join("g")
+      .attr("class", "chart")
+      .attr("add_bar", function(d) {
+        d3.select(this)
+            .selectAll("rect")
+            .data(data)
+            .join("rect")
+            .attr("x", d => x_scale(d[x_var]))
+            .attr("y", d => y_scale(d[y_var]))
+            .attr("width", x_scale.bandwidth())
+            .attr("height", d => h - y_scale(d[y_var]))
+            .attr("fill", "#69b3a2");
+      })
   }
    
   render() {
